@@ -12,20 +12,27 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.ultimateiptvplayer.Channels.Exceptions.BadLoginException;
 import com.example.ultimateiptvplayer.R;
 import com.google.android.material.textfield.TextInputEditText;
+
+import org.w3c.dom.Text;
+
+import java.io.IOException;
 
 public class LoginFragment extends Fragment {
 
     private TextInputEditText idInput;
     private TextInputEditText passwordInput;
     private Button loginButton;
+    private TextInputEditText urlInput;
     private OnLoginListener callback;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
+            //Set the callback interface
             callback = (OnLoginListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
@@ -44,28 +51,26 @@ public class LoginFragment extends Fragment {
         idInput = view.findViewById(R.id.login_id_input);
         passwordInput = view.findViewById(R.id.login_password_input);
         loginButton = view.findViewById(R.id.login_button);
+        urlInput = view.findViewById(R.id.login_url_input);
 
         // Set an OnClickListener on the button
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle button click here
+                // Get text information from the input fields
                 String id = idInput.getText().toString();
                 String password = passwordInput.getText().toString();
+                String url = urlInput.getText().toString();
 
-                if (validateLogin(id, password)) {
-                    callback.onLoginSuccess(id,password);
-                } else {
-                    callback.onLoginFailure();
+                try {
+                    // Call the onLogin method of the callback
+                    callback.onLogin(id,password,url);
+                } catch (IOException | BadLoginException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
 
         return view;
-    }
-
-    private boolean validateLogin(String id, String password) {
-        // Add your validation logic here
-        return id.equals("user") && password.equals("password");
     }
 }

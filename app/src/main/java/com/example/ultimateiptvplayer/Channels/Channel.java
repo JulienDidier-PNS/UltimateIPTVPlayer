@@ -1,4 +1,4 @@
-package com.example.ultimateiptvplayer.Menu.Channels;
+package com.example.ultimateiptvplayer.Channels;
 
 import android.widget.ImageView;
 
