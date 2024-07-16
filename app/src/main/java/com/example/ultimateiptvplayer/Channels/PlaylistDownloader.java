@@ -18,7 +18,6 @@ public class PlaylistDownloader {
     }
 
     private static class FileDownloadTask extends AsyncTask<String, Void, Boolean> {
-
         private Context context;
         private DownloadCallback callback;
 

@@ -28,14 +28,16 @@ public class MainActivity extends AppCompatActivity implements OnLoginListener {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         this.loginFragment = new LoginFragment();
-        fragmentTransaction.add(R.id.login_fragment, loginFragment);
+        fragmentTransaction.add(R.id.fragment_container, loginFragment);
         fragmentTransaction.commit();
     }
 
     @Override
     public void onLogin(String id,String password,String url) throws IOException, BadLoginException {
         //if login is succesfull
-
+        id = "xx";
+        password = "xx";
+        url = "xx";
         this.playlistManager = new PlaylistManager();
         //download the m3u file
         playlistManager.downloadPlaylist(id,password,url,new PlaylistManager.PlaylistDownloadCallback() {
