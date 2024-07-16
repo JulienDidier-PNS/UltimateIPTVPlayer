@@ -19,6 +19,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class LoginFragment extends Fragment {
 
@@ -58,9 +59,9 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Get text information from the input fields
-                String id = idInput.getText().toString();
-                String password = passwordInput.getText().toString();
-                String url = urlInput.getText().toString();
+                String id = Objects.requireNonNull(idInput.getText()).toString();
+                String password = Objects.requireNonNull(passwordInput.getText()).toString();
+                String url = Objects.requireNonNull(urlInput.getText()).toString();
 
                 try {
                     // Call the onLogin method of the callback
