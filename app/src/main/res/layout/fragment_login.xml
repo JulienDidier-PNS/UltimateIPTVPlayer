@@ -26,10 +26,19 @@
         android:inputType="textUri"
         />
 
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/playlist_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Playlist Name"
+        />
+
     <Button
+        android:layout_margin="100dp"
         android:id="@+id/login_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login" />
+
 
 </LinearLayout>

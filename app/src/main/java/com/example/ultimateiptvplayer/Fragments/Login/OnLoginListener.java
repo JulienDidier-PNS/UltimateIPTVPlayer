@@ -5,5 +5,5 @@ import com.example.ultimateiptvplayer.Channels.Exceptions.BadLoginException;
 import java.io.IOException;
 
 public interface OnLoginListener {
-    void onLogin(String id,String password,String url) throws IOException, BadLoginException;
+    void onLogin(String id,String password,String url,String playlistName) throws IOException, BadLoginException;
 }

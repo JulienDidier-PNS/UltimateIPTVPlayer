@@ -27,6 +27,7 @@ public class LoginFragment extends Fragment {
     private TextInputEditText passwordInput;
     private Button loginButton;
     private TextInputEditText urlInput;
+    private TextInputEditText playlistNameInput;
     private OnLoginListener callback;
 
     @Override
@@ -53,6 +54,7 @@ public class LoginFragment extends Fragment {
         passwordInput = view.findViewById(R.id.login_password_input);
         loginButton = view.findViewById(R.id.login_button);
         urlInput = view.findViewById(R.id.login_url_input);
+        playlistNameInput = view.findViewById(R.id.playlist_name);
 
         // Set an OnClickListener on the button
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -62,13 +64,12 @@ public class LoginFragment extends Fragment {
                 String id = Objects.requireNonNull(idInput.getText()).toString();
                 String password = Objects.requireNonNull(passwordInput.getText()).toString();
                 String url = Objects.requireNonNull(urlInput.getText()).toString();
+                String playlistName = Objects.requireNonNull(playlistNameInput.getText()).toString();
 
                 try {
                     // Call the onLogin method of the callback
-                    callback.onLogin(id,password,url);
-                } catch (IOException | BadLoginException e) {
-                    throw new RuntimeException(e);
-                }
+                    callback.onLogin(id,password,url,playlistName);
+                } catch (IOException | BadLoginException e) {throw new RuntimeException(e);}
             }
         });
 
