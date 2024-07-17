@@ -12,7 +12,7 @@ public class Playlist {
     /**
      * The URL of the playlist
      */
-    private Uri url;
+    private String internalPlaylistPath;
     /**
      * The name of the playlist
      */
@@ -23,14 +23,27 @@ public class Playlist {
     private int id;
     private ArrayList<Channel> channels;
 
-    public Playlist(Uri url, String name, int id) {
-        this.url = url;
+    public Playlist(String internalPlaylistPath, String name, int id) {
+        this.internalPlaylistPath = internalPlaylistPath;
         this.name = name;
         this.id = id;
+        this.channelParser = new ChannelParser();
     }
 
-    public void updateChannels(ArrayList<Channel> channels) {
+    public void updateChannels() {
+        channelParser.updateChannels(this);
+    }
+
+    public String getInternalPlaylistPath() {
+        return internalPlaylistPath;
+    }
+
+    public void setChannels(ArrayList<Channel> channels) {
         this.channels = channels;
+    }
+
+    public Channel getChannel(int index) {
+        return channels.get(index);
     }
 
 }
