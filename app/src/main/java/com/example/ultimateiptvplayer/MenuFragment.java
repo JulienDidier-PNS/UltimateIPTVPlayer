@@ -29,6 +29,7 @@ public class MenuFragment extends Fragment {
         System.out.println("MenuFragment onCreateView");
         //Build the Channels ListView
         FragmentManager fragmentManager = getFragmentManager();
+        assert fragmentManager != null;
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.categories_fragment, categorieFragment);
         transaction.commit();

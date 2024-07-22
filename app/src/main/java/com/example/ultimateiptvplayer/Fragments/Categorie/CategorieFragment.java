@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.ultimateiptvplayer.Channels.Channel;
 import com.example.ultimateiptvplayer.Fragments.Categorie.ListView.CategoryAdapter;
+import com.example.ultimateiptvplayer.Fragments.Channels.ChannelsFragment;
 import com.example.ultimateiptvplayer.Playlist.Playlist;
 import com.example.ultimateiptvplayer.R;
 
@@ -30,8 +31,8 @@ import java.util.regex.Pattern;
 public class CategorieFragment extends Fragment {
     private ListView categorieLV;
     private Spinner langageFilter;
-    private Playlist playlist;
-    private final List<String> FrenchOrder = Arrays.asList("EU | FRANCE"); // Replace with your specific order
+    private ChannelsFragment channelsFragment;
+    private final Playlist playlist;
 
     public CategorieFragment(Playlist playlist) {
         this.playlist = playlist;
@@ -50,6 +51,7 @@ public class CategorieFragment extends Fragment {
 
         langageFilter.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, langages_choice));
 
+        //set the behavior of the langage filter
        langageFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -69,6 +71,15 @@ public class CategorieFragment extends Fragment {
             }
         });
 
+       //set the behavior of the categories list
+        categorieLV.setOnItemClickListener((parent, view1, position, id) -> {
+            String category = (String) parent.getItemAtPosition(position);
+            System.out.println("Selected Category: " + category);
+            //Build the Channels ListView
+            channelsFragment = new ChannelsFragment(playlist.getChannelsByCategory(category));
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.channel_navigation_fragment, channelsFragment).addToBackStack(null).commit();
+        });
+
         // Build the Channels ListView
         setupListView(LANGAGES.OTHER);
 
@@ -77,7 +88,6 @@ public class CategorieFragment extends Fragment {
 
     private void setupListView(LANGAGES langage) {
         TreeMap<String, ArrayList<Channel>> channels = playlist.getAllChannels(); // Assurez-vous que la méthode getChannels() existe et retourne le TreeMap
-        System.out.println("Categories Count: " + channels.size());
         List<String> categories = filterAndSortCategories(new ArrayList<>(channels.keySet()), langage);
 
         CategoryAdapter adapter = new CategoryAdapter(getContext(), categories);
@@ -92,27 +102,25 @@ public class CategorieFragment extends Fragment {
     private List<String> filterAndSortCategories(List<String> categories, LANGAGES langage) {
         List<String> sortedCategories = new ArrayList<>();
 
+        //Add other pattern for other langages
         Pattern frenchPattern = Pattern.compile("EU \\| FRANCE", Pattern.CASE_INSENSITIVE);
 
+        //Add ONLY THE CATEGORIES WHICH MATCHES
         if(langage == LANGAGES.FR){
             for (String category : categories) {
                 Matcher matcher = frenchPattern.matcher(category);
-                if (matcher.find()) {
-                    System.out.println("Matched: " + category);
-                    sortedCategories.add(category);
-                }
+                if (matcher.find()) {sortedCategories.add(category);}
             }
         }
+        //Doesn't match any langage -> DEFAULT ORDER (alphabetical)
+        else{return categories;}
 
-
-        // Optionally add remaining categories not in specificOrder
+        // ADD the rest of the categories
         for (String category : categories) {
             if (!sortedCategories.contains(category)) {
                 sortedCategories.add(category);
             }
         }
-
-        System.out.println("First categories: " + sortedCategories.get(0));
 
         return sortedCategories;
     }
