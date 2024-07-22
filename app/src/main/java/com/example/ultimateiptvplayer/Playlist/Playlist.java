@@ -6,6 +6,7 @@ import com.example.ultimateiptvplayer.Channels.Channel;
 import com.example.ultimateiptvplayer.Channels.ChannelParser;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 public class Playlist {
     private ChannelParser channelParser;
@@ -21,7 +22,7 @@ public class Playlist {
      * The id of the playlist
      */
     private int id;
-    private ArrayList<Channel> channels;
+    TreeMap<String, ArrayList<Channel>> channels = new TreeMap<>();
 
     public Playlist(String internalPlaylistPath, String name, int id) {
         this.internalPlaylistPath = internalPlaylistPath;
@@ -38,12 +39,13 @@ public class Playlist {
         return internalPlaylistPath;
     }
 
-    public void setChannels(ArrayList<Channel> channels) {
+    public void setChannels(TreeMap<String,ArrayList<Channel>> channels) {
         this.channels = channels;
     }
 
-    public Channel getChannel(int index) {
-        return channels.get(index);
-    }
+    public ArrayList<Channel> getChannelsByCategory(String category) {return channels.get(category);}
 
+    public TreeMap<String, ArrayList<Channel>> getAllChannels() {
+        return channels;
+    }
 }

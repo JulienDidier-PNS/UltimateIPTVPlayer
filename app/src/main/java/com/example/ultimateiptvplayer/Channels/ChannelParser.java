@@ -61,10 +61,10 @@ public class ChannelParser {
                 if (!categories.containsKey(c.getGroupTitle())) {categories.put(c.getGroupTitle(), new ArrayList<>());}
                 Objects.requireNonNull(categories.get(c.getGroupTitle())).add(c);
             }
+            //Finally, set the channels for the playlist
+            playlist.setChannels(categories);
 
         } catch (IOException e) {e.printStackTrace();}
-
-        playlist.setChannels(channels);
     }
 
     private String extractAttribute(String line, String attribute) {

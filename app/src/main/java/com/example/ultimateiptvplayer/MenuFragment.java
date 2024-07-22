@@ -11,24 +11,28 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.ultimateiptvplayer.Fragments.Login.LoginFragment;
+import com.example.ultimateiptvplayer.Fragments.Categorie.CategorieFragment;
 import com.example.ultimateiptvplayer.Playlist.PlaylistsManager;
-
-import java.util.Objects;
 
 public class MenuFragment extends Fragment {
     private final PlaylistsManager playlistManager;
+    private final CategorieFragment categorieFragment;
 
     public MenuFragment(PlaylistsManager playlistManager) {
         this.playlistManager = playlistManager;
+        this.categorieFragment = new CategorieFragment(playlistManager.getCurrentPlaylist());
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         System.out.println("MenuFragment onCreateView");
+        //Build the Channels ListView
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.categories_fragment, categorieFragment);
+        transaction.commit();
 
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.menu_layout, container, false);
     }
 

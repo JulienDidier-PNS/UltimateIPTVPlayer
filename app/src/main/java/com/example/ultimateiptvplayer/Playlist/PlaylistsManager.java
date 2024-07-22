@@ -34,6 +34,10 @@ public class PlaylistsManager {
         return playlistCounter;
     }
 
+    public Playlist getCurrentPlaylist() {
+        return currentPlaylist;
+    }
+
     /**
      * Call when the PlaylistManager is created.
      *
