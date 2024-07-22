@@ -45,7 +45,6 @@ public class ChannelParser {
                         if (channel != null) {
                             channel.setUrl(line);
                             channels.add(channel);
-                            System.out.println("Channel added" + channel);
                             channel = null;
                         }
                     }
