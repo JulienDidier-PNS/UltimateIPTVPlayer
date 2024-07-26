@@ -43,9 +43,10 @@ public class Playlist {
         this.channels = channels;
     }
 
-    public ArrayList<Channel> getChannelsByCategory(String category) {return channels.get(category);}
+    public ArrayList<Channel> getChannelsByCategoryName(String category) {return channels.get(category);}
 
     public TreeMap<String, ArrayList<Channel>> getAllChannels() {
         return channels;
     }
+
 }

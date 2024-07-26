@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.example.ultimateiptvplayer.Channels.Channel;
 import com.example.ultimateiptvplayer.Fragments.Categorie.ListView.CategoryAdapter;
 import com.example.ultimateiptvplayer.Fragments.Channels.ChannelsFragment;
+import com.example.ultimateiptvplayer.Fragments.Channels.OnChannelListener;
 import com.example.ultimateiptvplayer.Playlist.Playlist;
 import com.example.ultimateiptvplayer.R;
 
@@ -33,9 +34,11 @@ public class CategorieFragment extends Fragment {
     private Spinner langageFilter;
     private ChannelsFragment channelsFragment;
     private final Playlist playlist;
+    private OnCategoriesListener onCategoriesListener;
 
-    public CategorieFragment(Playlist playlist) {
+    public CategorieFragment(Playlist playlist, OnCategoriesListener onCategoriesListener) {
         this.playlist = playlist;
+        this.onCategoriesListener = onCategoriesListener;
     }
 
     @Nullable
@@ -75,9 +78,7 @@ public class CategorieFragment extends Fragment {
         categorieLV.setOnItemClickListener((parent, view1, position, id) -> {
             String category = (String) parent.getItemAtPosition(position);
             System.out.println("Selected Category: " + category);
-            //Build the Channels ListView
-            channelsFragment = new ChannelsFragment(playlist.getChannelsByCategory(category));
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.channel_navigation_fragment, channelsFragment).addToBackStack(null).commit();
+            this.onCategoriesListener.onCategoriesClick(category);
         });
 
         // Build the Channels ListView

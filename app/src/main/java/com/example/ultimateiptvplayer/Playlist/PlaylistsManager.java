@@ -45,14 +45,19 @@ public class PlaylistsManager {
     private void initPlaylists(){
         String playlistPath = Objects.requireNonNull(appContext.getExternalFilesDir(null)).getPath() + "/playlist.m3u8";
 
-        if(new File(playlistPath).exists()){System.out.println("Playlist already exists ! Adding it to the list");}
-        else{System.out.println("No playlist found, creating an empty list");}
+        if(new File(playlistPath).exists()){
+            Playlist newPlaylist = new Playlist(playlistPath, "playlist", playlistCounter);
+            this.playlists.add(newPlaylist);
+            this.currentPlaylist = newPlaylist;
+            playlistCounter++;
+            System.out.println(this.playlists.size() + " playlists added");
+        }
+        else{
+            System.out.println("No playlist found, creating an empty list");
+            this.currentPlaylist = null;
+        }
 
-        Playlist newPlaylist = new Playlist(playlistPath, "playlist", playlistCounter);
-        this.playlists.add(newPlaylist);
-        this.currentPlaylist = newPlaylist;
-        playlistCounter++;
-        System.out.println(this.playlists.size() + " playlists added");
+
     }
 
     /**
@@ -76,14 +81,6 @@ public class PlaylistsManager {
     }
 
     /**
-     * Initialize the categories of the currentPlaylist
-     */
-    public void initCategories() {
-        this.currentPlaylist.updateChannels();
-        System.out.println("Categories initialized");
-    }
-
-    /**
      * Add a playlist to the list
      * @param context is the Application context
      * @param id is the playlist username
@@ -103,8 +100,8 @@ public class PlaylistsManager {
         Uri finalUrl = Uri.parse(url);
         //start the download
 
-        System.out.println(Objects.requireNonNull(context.getExternalFilesDir(null)).getPath()+filename);
-        FileDownloader.download(context,finalUrl, filename,callback);
+        System.out.println(playlistPath);
+        FileDownloader.download(context,finalUrl, playlistPath,callback);
 
         this.playlists.add(new Playlist(playlistPath, playlistName, playlistCounter));
         playlistCounter++;

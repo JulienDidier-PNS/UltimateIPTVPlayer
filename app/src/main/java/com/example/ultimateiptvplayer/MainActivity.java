@@ -1,5 +1,6 @@
 package com.example.ultimateiptvplayer;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,12 +16,8 @@ import com.example.ultimateiptvplayer.Playlist.PlaylistsManager;
 
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements OnLoginListener, OnDownloadListener {
-
-    MenuFragment menuFragment;
-    LoginFragment loginFragment;
+public class MainActivity extends AppCompatActivity {
     PlaylistsManager playlistManager;
-    ProgressBarFragment progressBarFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,58 +26,23 @@ public class MainActivity extends AppCompatActivity implements OnLoginListener, 
 
         //Check if a playlist is already saved
         playlistManager = PlaylistsManager.getInstance(getApplicationContext());
-        if(playlistManager.getPlaylistCounter()>0){
+        if(playlistManager.getCurrentPlaylist() != null){
             //There is a playlist saved, use this one
             System.out.println("A Playlist already saved !");
             switchToPlaylistNavigation();
         }
         else{
             //There is no playlist saved, add the login fragment
-            System.out.println("No playlist saved, add login fragment");
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            this.loginFragment = new LoginFragment();
-            transaction.replace(R.id.fragment_container, loginFragment);
-            transaction.commit();
+            System.out.println("No playlist saved, switching to login activity");
+            Intent loginActivity = new Intent(this, LoginActivity.class);
+            startActivity(loginActivity);
         }
-    }
-
-    @Override
-    public void onLogin(String id,String password,String url,String playlistName) throws IOException, BadLoginException {
-        // If login is successful
-        this.playlistManager = PlaylistsManager.getInstance(getApplicationContext());
-
-        // Create and show the download fragment
-        this.progressBarFragment = new ProgressBarFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, progressBarFragment);
-        transaction.commit();
-
-        // Start the download and pass the download fragment as the callback
-        playlistManager.addPlaylist(getApplicationContext(), id, password, url, playlistName, progressBarFragment);
-    }
-
-    /**
-     * This method is called when the download is complete
-     * It will replace the download fragment (now done) to the next step of playlist registration -> naming the playlist
-     */
-    @Override
-    public void onDownloadComplete() {
-        // If download is complete
-        switchToPlaylistNavigation();
     }
 
     private void switchToPlaylistNavigation(){
         // If download is complete
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        this.menuFragment = new MenuFragment(this.playlistManager);
-        this.playlistManager.initCategories();
-
-        transaction.replace(R.id.fragment_container, menuFragment);
-        transaction.commit();
-    }
-
-    @Override
-    public void onDownloadError(String error) {
-
+        System.out.println("A playlist already exist ! Switching to playlist navigation");
+        Intent navigationActivity = new Intent(this, NavigationActivity.class);
+        startActivity(navigationActivity);
     }
 }

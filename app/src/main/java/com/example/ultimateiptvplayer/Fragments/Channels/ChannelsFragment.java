@@ -23,9 +23,11 @@ public class ChannelsFragment extends Fragment {
 
     private GridView channelGrid;
     private final ArrayList<Channel> channelsList;
+    private OnChannelListener onChannelListener;
 
-    public ChannelsFragment(ArrayList<Channel> channels) {
+    public ChannelsFragment(ArrayList<Channel> channels,OnChannelListener onChannelListener) {
         this.channelsList = channels;
+        this.onChannelListener = onChannelListener;
     }
 
     @Nullable
@@ -36,6 +38,8 @@ public class ChannelsFragment extends Fragment {
 
         // Build the Channels GridLayout
         setupGridView();
+
+        this.channelGrid.setOnItemClickListener((parent, view1, position, id) -> onChannelListener.onChannelClick(position));
 
         return view;
     }

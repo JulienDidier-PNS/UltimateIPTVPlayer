@@ -19,27 +19,27 @@ import com.example.ultimateiptvplayer.Fragments.ProgressBar.ProgressCallBack;
 public class FileDownloader {
 
     @OptIn(markerClass = UnstableApi.class)
-    public static void download(Context context, Uri url, String filename, ProgressCallBack callback) {
-        new DownloadFileTask(context, url, filename, callback).execute();
+    public static void download(Context context, Uri url, String playlistPath, ProgressCallBack callback) {
+        new DownloadFileTask(context, url, playlistPath, callback).execute();
     }
 
     private static class DownloadFileTask extends AsyncTask<Void, Integer, String> {
         private Context context;
         private Uri url;
-        private String filename;
+        private String path;
         private ProgressCallBack callback;
 
-        public DownloadFileTask(Context context, Uri url, String filename, ProgressCallBack callback) {
+        public DownloadFileTask(Context context, Uri url, String playlistPath, ProgressCallBack callback) {
             this.context = context;
             this.url = url;
-            this.filename = filename;
+            this.path = playlistPath;
             this.callback = callback;
         }
 
         @Override
         protected String doInBackground(Void... voids) {
             try {
-                downloadFile(context, url, filename);
+                downloadFile(context, url, path);
             } catch (IOException e) {
                 e.printStackTrace();
                 return e.getMessage();
@@ -48,27 +48,25 @@ public class FileDownloader {
         }
 
         @OptIn(markerClass = UnstableApi.class)
-        private void downloadFile(Context context, Uri url, String filename) throws IOException {
+        private void downloadFile(Context context, Uri url, String path) throws IOException {
             File directory = context.getExternalFilesDir(null);
             if (directory != null) {
-                if (!directory.exists()) {
-                    directory.mkdirs();
-                }
-
-                File fileName = new File(directory, filename);
-
-                if (!fileName.exists()) {
-                    fileName.createNewFile();
-                }
                 URL u = new URL(url.toString());
 
                 HttpURLConnection connect = (HttpURLConnection) u.openConnection();
 
-                if (connect.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    Log.w("ERROR SERVER RET HTTP", connect.getResponseCode() + "");
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                File fileName = new File(path);
+
+                if (!fileName.exists()) {
+                    fileName.createNewFile();
                 }
 
                 int fileLength = connect.getContentLength();
+                System.out.println("File length: " + fileLength);
 
                 try (InputStream is = connect.getInputStream();
                      FileOutputStream fos = new FileOutputStream(fileName)) {
