@@ -1,6 +1,9 @@
 package com.example.ultimateiptvplayer.Channels;
 
-import androidx.annotation.NonNull;
+import com.example.ultimateiptvplayer.QUALITY;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Channel {
     private String tvgId;
@@ -9,6 +12,7 @@ public class Channel {
     private String groupTitle;
     private String channelName;
     private String url;
+    private QUALITY quality;
 
     public Channel(String tvgId, String tvgName, String tvgLogo, String groupTitle, String channelName, String url) {
         this.tvgId = tvgId;
@@ -17,6 +21,7 @@ public class Channel {
         this.groupTitle = groupTitle;
         this.channelName = channelName;
         this.url = url;
+        detectQuality();
     }
 
     // Getters and setters for each property
@@ -68,6 +73,10 @@ public class Channel {
         this.url = url;
     }
 
+    public QUALITY getQuality() {
+        return quality;
+    }
+
     @Override
     public String toString() {
         return "Channel{" +
@@ -78,5 +87,24 @@ public class Channel {
                 ", channelName='" + channelName + '\'' +
                 ", url='" + url + '\'' +
                 '}';
+    }
+
+    public void detectQuality() {
+        //Add other pattern for other langages
+        Pattern HDPattern = Pattern.compile(" HD$", Pattern.CASE_INSENSITIVE);
+        Pattern FHDPattern = Pattern.compile(" FHD$", Pattern.CASE_INSENSITIVE);
+        Pattern HEVCPattern = Pattern.compile(" HEVC$", Pattern.CASE_INSENSITIVE);
+        Pattern SDPattern = Pattern.compile(" SD$", Pattern.CASE_INSENSITIVE);
+
+        Matcher HDMatcher = HDPattern.matcher(this.channelName);
+        Matcher FHDMatcher = FHDPattern.matcher(this.channelName);
+        Matcher HEVCmatcher = HEVCPattern.matcher(this.channelName);
+        Matcher SDmatcher = SDPattern.matcher(this.channelName);
+
+        if (HDMatcher.find()) {this.quality = QUALITY.HD;}
+        else if (FHDMatcher.find()) {this.quality = QUALITY.FHD;}
+        else if (HEVCmatcher.find()) {this.quality = QUALITY.HEVC;}
+        else if(SDmatcher.find()) {this.quality = QUALITY.SD;}
+        else {this.quality =  QUALITY.UNKNOWN;}
     }
 }

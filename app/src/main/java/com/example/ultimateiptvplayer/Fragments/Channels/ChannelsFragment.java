@@ -23,13 +23,14 @@ public class ChannelsFragment extends Fragment {
 
     private GridView channelGrid;
     private final ArrayList<Channel> channelsList;
-    private OnChannelListener onChannelListener;
+    private final OnChannelListener onChannelListener;
 
     public ChannelsFragment(ArrayList<Channel> channels,OnChannelListener onChannelListener) {
         this.channelsList = channels;
         this.onChannelListener = onChannelListener;
     }
 
+    private int currentChannelPosition = -1;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,7 +40,21 @@ public class ChannelsFragment extends Fragment {
         // Build the Channels GridLayout
         setupGridView();
 
-        this.channelGrid.setOnItemClickListener((parent, view1, position, id) -> onChannelListener.onChannelClick(position));
+        this.channelGrid.setOnItemClickListener((parent, view1, position, id) -> {
+
+            if(currentChannelPosition != -1){
+                View previousView = parent.getChildAt(currentChannelPosition);
+                previousView.setBackgroundColor(getResources().getColor(R.color.transparent));
+                view1.setBackground(getResources().getDrawable(R.color.purple));
+            }
+            else{
+                view1.setBackground(getResources().getDrawable(R.color.purple));
+            }
+            currentChannelPosition = position;
+
+            onChannelListener.onChannelClick(position);
+        });
+        this.channelGrid.setOnItemLongClickListener((parent, view12, position, id) -> {onChannelListener.onChannelLongClick(position);return true;});
 
         return view;
     }

@@ -11,5 +11,5 @@
     <color name="yellow">#FFFF00</color>
     <color name="orange">#FFA500</color>
     <color name="purple">#800080</color>
-
+    <color name="transparent">#00000000</color>
 </resources>

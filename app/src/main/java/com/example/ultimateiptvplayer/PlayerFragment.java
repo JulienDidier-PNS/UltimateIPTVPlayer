@@ -95,16 +95,6 @@ public class PlayerFragment extends Fragment {
             //otherwise, set it back to normal
             fcListener.setFullScreen(!fcListener.playerInFullScreen());
         });
-
-        OnBackPressedDispatcher onBackPressedDispatcher = requireActivity().getOnBackPressedDispatcher();
-        onBackPressedDispatcher.addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                System.out.println("Back pressed");
-                System.out.println("Currently in fullscreen ? " + inFullScreen);
-                if(fcListener.playerInFullScreen()){fcListener.setFullScreen(false);}
-            }
-        });
     }
 
 

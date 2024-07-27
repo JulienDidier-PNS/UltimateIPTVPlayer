@@ -32,9 +32,11 @@ import java.util.regex.Pattern;
 public class CategorieFragment extends Fragment {
     private ListView categorieLV;
     private Spinner langageFilter;
-    private ChannelsFragment channelsFragment;
     private final Playlist playlist;
     private OnCategoriesListener onCategoriesListener;
+
+    private String currentCategory;
+    private int currentCategoryPosition = -1;
 
     public CategorieFragment(Playlist playlist, OnCategoriesListener onCategoriesListener) {
         this.playlist = playlist;
@@ -78,6 +80,23 @@ public class CategorieFragment extends Fragment {
         categorieLV.setOnItemClickListener((parent, view1, position, id) -> {
             String category = (String) parent.getItemAtPosition(position);
             System.out.println("Selected Category: " + category);
+
+            if(currentCategoryPosition != -1) {
+                View previousView = parent.getChildAt(currentCategoryPosition);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    //remove the background color of the previous selected category
+                    previousView.setBackgroundColor(getResources().getColor(R.color.transparent, null));
+                } else {
+                    previousView.setBackgroundColor(getResources().getColor(R.color.transparent));
+                }
+            }
+
+            this.currentCategory = category;
+            this.currentCategoryPosition = position;
+
+            //set the background color of the selected category
+            view1.setBackgroundColor(getResources().getColor(R.color.purple));
+
             this.onCategoriesListener.onCategoriesClick(category);
         });
 
@@ -87,6 +106,9 @@ public class CategorieFragment extends Fragment {
         return view;
     }
 
+    public String getCurrentCategory() {
+        return currentCategory;
+    }
     private void setupListView(LANGAGES langage) {
         TreeMap<String, ArrayList<Channel>> channels = playlist.getAllChannels(); // Assurez-vous que la méthode getChannels() existe et retourne le TreeMap
         List<String> categories = filterAndSortCategories(new ArrayList<>(channels.keySet()), langage);

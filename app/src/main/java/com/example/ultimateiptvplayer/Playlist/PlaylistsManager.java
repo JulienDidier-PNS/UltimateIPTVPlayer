@@ -9,7 +9,6 @@ import com.example.ultimateiptvplayer.Fragments.ProgressBar.ProgressCallBack;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class PlaylistsManager {
@@ -110,5 +109,19 @@ public class PlaylistsManager {
     public void removePlaylist(int id) {
         this.playlists.remove(id);
         playlistCounter--;
+    }
+
+    public void deleteCurrentPlaylist() {
+        //remove the playlist file
+        File file = new File(this.currentPlaylist.getInternalPlaylistPath());
+        file.delete();
+        if(file.exists()){
+            System.out.println("File not deleted");
+        }
+        else{
+            System.out.println("File deleted");
+            this.playlists.remove(this.currentPlaylist);
+            playlistCounter--;
+        }
     }
 }
