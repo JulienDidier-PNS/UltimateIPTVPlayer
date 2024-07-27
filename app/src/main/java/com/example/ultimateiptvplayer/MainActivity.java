@@ -18,7 +18,6 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     PlaylistsManager playlistManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

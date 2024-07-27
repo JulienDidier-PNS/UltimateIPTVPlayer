@@ -1,10 +1,11 @@
 package com.example.ultimateiptvplayer;
 
 import android.os.Bundle;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.ultimateiptvplayer.Channels.Channel;
 import com.example.ultimateiptvplayer.Fragments.Categorie.CategorieFragment;
@@ -14,13 +15,17 @@ import com.example.ultimateiptvplayer.Fragments.Channels.OnChannelListener;
 import com.example.ultimateiptvplayer.Playlist.PlaylistsManager;
 
 public class NavigationActivity extends AppCompatActivity implements OnCategoriesListener, OnChannelListener, OnFullScreenListener {
+    private boolean firstTime = false;
     private PlaylistsManager playlistManager;
     private CategorieFragment categorieFragment;
     private ChannelsFragment channelsFragment;
-    private PlayerFragment playerFragment;
+
+    private PlayerFragment playerFragment_viewer;
+
     private String currentCategory;
     private Channel currentChannel;
 
+    private boolean playerInFullScreen = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +41,8 @@ public class NavigationActivity extends AppCompatActivity implements OnCategorie
         getSupportFragmentManager().beginTransaction().replace(R.id.categories_fragment, categorieFragment).commit();
 
         // Create the player fragment
-        playerFragment = PlayerFragment.getInstance(getApplicationContext(),this);
-        getSupportFragmentManager().beginTransaction().replace(R.id.player_fragment, playerFragment).commit();
+        playerFragment_viewer = PlayerFragment.getInstance(getApplicationContext(),this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.player_fragment_viewer, playerFragment_viewer).commit();
     }
 
     @Override
@@ -49,14 +54,31 @@ public class NavigationActivity extends AppCompatActivity implements OnCategorie
 
     @Override
     public void onChannelClick(int position) {
+        if(this.currentChannel == playlistManager.getCurrentPlaylist().getChannelsByCategoryName(currentCategory).get(position) ){
+            onFullScreen(!playerInFullScreen);
+        }
+
         this.currentChannel = playlistManager.getCurrentPlaylist().getChannelsByCategoryName(currentCategory).get(position);
-        playerFragment.setCurrentChannelUrl(this.currentChannel.getUrl());
-        if(this.playerFragment.playerReady()){playerFragment.playChannel();}
+        playerFragment_viewer.setCurrentChannelUrl(this.currentChannel.getUrl());
+        if(this.playerFragment_viewer.playerReady()){
+            playerFragment_viewer.playChannel();
+        }
     }
 
+    private ConstraintLayout.LayoutParams initparams;
+
     @Override
-    public boolean onFullScreen(boolean isFullScreen) {
-      return true;
+    public void onFullScreen(boolean isFullScreen) {
+        playerInFullScreen = isFullScreen;
+        FrameLayout player_fragment_viewer = findViewById(R.id.player_fragment_viewer);
+        if(initparams == null){
+            initparams = (ConstraintLayout.LayoutParams) player_fragment_viewer.getLayoutParams();
+        }
+        if(!isFullScreen){
+            player_fragment_viewer.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT));
+        }else{
+            player_fragment_viewer.setLayoutParams(initparams);
+        }
     }
 
 }

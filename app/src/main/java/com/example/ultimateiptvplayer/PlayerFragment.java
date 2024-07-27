@@ -3,6 +3,7 @@ package com.example.ultimateiptvplayer;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
@@ -28,11 +31,12 @@ public class PlayerFragment extends Fragment {
         if (instance == null) {instance = new PlayerFragment(context,fcListener);}
         return instance;
     }
-    private OnFullScreenListener fcListener;
+    private final OnFullScreenListener fcListener;
     private final Context context;
     private PlayerView playerView;
     private ExoPlayer player;
     private String currentChannelUrl;
+    private boolean isFullScreen = false;
 
     public PlayerFragment(Context context,OnFullScreenListener fcListener) {
         this.context = context;
@@ -45,35 +49,70 @@ public class PlayerFragment extends Fragment {
         return inflater.inflate(R.layout.player_layout, container, false);
     }
 
+    private Handler handler;
+    private Runnable hideRunnable;
+    private static final long DISPLAY_DURATION_MS = 3000; // Durée pendant laquelle le logo et l'overlay doivent rester visibles (en millisecondes)
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         playerView = view.findViewById(R.id.player_view);
         initializePlayer();
 
         ImageView focusLogo = view.findViewById(R.id.focus_logo);
         View grayOverlay = view.findViewById(R.id.gray_overlay);
 
+        // Initialisation du Handler et du Runnable
+        handler = new Handler();
+        hideRunnable = () -> {
+            focusLogo.setVisibility(View.GONE);
+            grayOverlay.setVisibility(View.GONE);
+        };
+
         this.playerView.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 // Afficher le logo
                 focusLogo.setVisibility(View.VISIBLE);
                 grayOverlay.setVisibility(View.VISIBLE);
+
+                // Annuler toute tâche de masquage programmée
+                handler.removeCallbacks(hideRunnable);
+
+                // Planifier la disparition des éléments après un délai
+                handler.postDelayed(hideRunnable, DISPLAY_DURATION_MS);
             } else {
                 // Retirer le logo
                 focusLogo.setVisibility(View.GONE);
                 grayOverlay.setVisibility(View.GONE);
+
+                // Annuler toute tâche de masquage programmée (au cas où)
+                handler.removeCallbacks(hideRunnable);
             }
         });
 
         this.playerView.setOnClickListener(v -> {
             //mettre le player en fullscreen
-            System.out.println("FULL SCREEN ASKED");
-            //isFullScreen = this.fcListener.onFullScreen(isFullScreen);
+            this.fcListener.onFullScreen(isFullScreen);
+            isFullScreen = !isFullScreen;
+            System.out.println("isFullScreen: "+isFullScreen);
+        });
+
+        OnBackPressedDispatcher onBackPressedDispatcher = requireActivity().getOnBackPressedDispatcher();
+        onBackPressedDispatcher.addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                System.out.println("Back pressed");
+                System.out.println("isFullScreen: "+isFullScreen);
+                if(isFullScreen){
+                    fcListener.onFullScreen(isFullScreen);
+                    isFullScreen = !isFullScreen;
+                }
+            }
         });
     }
 
-    private boolean isFullScreen = false;
+
 
     public void setCurrentChannelUrl(String currentChannelUrl){
         this.currentChannelUrl = currentChannelUrl;

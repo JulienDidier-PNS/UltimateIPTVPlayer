@@ -1,5 +1,7 @@
 package com.example.ultimateiptvplayer;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 public interface OnFullScreenListener {
-    boolean onFullScreen(boolean isFullScreen);
+    void onFullScreen(boolean isFullScreen);
 }
