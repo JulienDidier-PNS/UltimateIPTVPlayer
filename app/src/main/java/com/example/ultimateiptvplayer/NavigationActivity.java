@@ -3,6 +3,8 @@ package com.example.ultimateiptvplayer;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 
 import com.example.ultimateiptvplayer.Channels.Channel;
 import com.example.ultimateiptvplayer.Fragments.Categorie.CategorieFragment;
@@ -11,7 +13,7 @@ import com.example.ultimateiptvplayer.Fragments.Channels.ChannelsFragment;
 import com.example.ultimateiptvplayer.Fragments.Channels.OnChannelListener;
 import com.example.ultimateiptvplayer.Playlist.PlaylistsManager;
 
-public class NavigationActivity extends AppCompatActivity implements OnCategoriesListener, OnChannelListener {
+public class NavigationActivity extends AppCompatActivity implements OnCategoriesListener, OnChannelListener, OnFullScreenListener {
     private PlaylistsManager playlistManager;
     private CategorieFragment categorieFragment;
     private ChannelsFragment channelsFragment;
@@ -29,8 +31,13 @@ public class NavigationActivity extends AppCompatActivity implements OnCategorie
 
         playlistManager.getCurrentPlaylist().updateChannels();
 
+        // Create the categories fragment
         this.categorieFragment = new CategorieFragment(playlistManager.getCurrentPlaylist(),this);
         getSupportFragmentManager().beginTransaction().replace(R.id.categories_fragment, categorieFragment).commit();
+
+        // Create the player fragment
+        playerFragment = PlayerFragment.getInstance(getApplicationContext(),this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.player_fragment, playerFragment).commit();
     }
 
     @Override
@@ -43,9 +50,13 @@ public class NavigationActivity extends AppCompatActivity implements OnCategorie
     @Override
     public void onChannelClick(int position) {
         this.currentChannel = playlistManager.getCurrentPlaylist().getChannelsByCategoryName(currentCategory).get(position);
-        playerFragment = PlayerFragment.getInstance(getApplicationContext());
-        getSupportFragmentManager().beginTransaction().replace(R.id.player_fragment, playerFragment).commit();
         playerFragment.setCurrentChannelUrl(this.currentChannel.getUrl());
         if(this.playerFragment.playerReady()){playerFragment.playChannel();}
     }
+
+    @Override
+    public boolean onFullScreen(boolean isFullScreen) {
+      return true;
+    }
+
 }

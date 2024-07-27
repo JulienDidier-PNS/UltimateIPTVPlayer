@@ -6,11 +6,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.util.UnstableApi;
@@ -20,17 +24,19 @@ import androidx.media3.ui.PlayerView;
 
 public class PlayerFragment extends Fragment {
     public static PlayerFragment instance;
-    public static PlayerFragment getInstance(Context context) {
-        if (instance == null) {instance = new PlayerFragment(context);}
+    public static PlayerFragment getInstance(Context context,OnFullScreenListener fcListener) {
+        if (instance == null) {instance = new PlayerFragment(context,fcListener);}
         return instance;
     }
+    private OnFullScreenListener fcListener;
     private final Context context;
     private PlayerView playerView;
     private ExoPlayer player;
     private String currentChannelUrl;
 
-    public PlayerFragment(Context context) {
+    public PlayerFragment(Context context,OnFullScreenListener fcListener) {
         this.context = context;
+        this.fcListener = fcListener;
     }
 
     @Nullable
@@ -44,7 +50,30 @@ public class PlayerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         playerView = view.findViewById(R.id.player_view);
         initializePlayer();
+
+        ImageView focusLogo = view.findViewById(R.id.focus_logo);
+        View grayOverlay = view.findViewById(R.id.gray_overlay);
+
+        this.playerView.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                // Afficher le logo
+                focusLogo.setVisibility(View.VISIBLE);
+                grayOverlay.setVisibility(View.VISIBLE);
+            } else {
+                // Retirer le logo
+                focusLogo.setVisibility(View.GONE);
+                grayOverlay.setVisibility(View.GONE);
+            }
+        });
+
+        this.playerView.setOnClickListener(v -> {
+            //mettre le player en fullscreen
+            System.out.println("FULL SCREEN ASKED");
+            //isFullScreen = this.fcListener.onFullScreen(isFullScreen);
+        });
     }
+
+    private boolean isFullScreen = false;
 
     public void setCurrentChannelUrl(String currentChannelUrl){
         this.currentChannelUrl = currentChannelUrl;
