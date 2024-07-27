@@ -7,8 +7,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -17,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.util.UnstableApi;
@@ -36,7 +33,7 @@ public class PlayerFragment extends Fragment {
     private PlayerView playerView;
     private ExoPlayer player;
     private String currentChannelUrl;
-    private boolean isFullScreen = false;
+    private boolean inFullScreen = false;
 
     public PlayerFragment(Context context,OnFullScreenListener fcListener) {
         this.context = context;
@@ -92,10 +89,11 @@ public class PlayerFragment extends Fragment {
         });
 
         this.playerView.setOnClickListener(v -> {
-            //mettre le player en fullscreen
-            this.fcListener.onFullScreen(isFullScreen);
-            isFullScreen = !isFullScreen;
-            System.out.println("isFullScreen: "+isFullScreen);
+            System.out.println("Click on player the view");
+            System.out.println("Currently in fullscreen ? " + fcListener.playerInFullScreen());
+            //if not in full screen, set it in full screen
+            //otherwise, set it back to normal
+            fcListener.setFullScreen(!fcListener.playerInFullScreen());
         });
 
         OnBackPressedDispatcher onBackPressedDispatcher = requireActivity().getOnBackPressedDispatcher();
@@ -103,11 +101,8 @@ public class PlayerFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
                 System.out.println("Back pressed");
-                System.out.println("isFullScreen: "+isFullScreen);
-                if(isFullScreen){
-                    fcListener.onFullScreen(isFullScreen);
-                    isFullScreen = !isFullScreen;
-                }
+                System.out.println("Currently in fullscreen ? " + inFullScreen);
+                if(fcListener.playerInFullScreen()){fcListener.setFullScreen(false);}
             }
         });
     }

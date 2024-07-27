@@ -5,7 +5,6 @@ import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.ultimateiptvplayer.Channels.Channel;
 import com.example.ultimateiptvplayer.Fragments.Categorie.CategorieFragment;
@@ -54,8 +53,11 @@ public class NavigationActivity extends AppCompatActivity implements OnCategorie
 
     @Override
     public void onChannelClick(int position) {
+        //if the channel is currently playing, set it in full screen
         if(this.currentChannel == playlistManager.getCurrentPlaylist().getChannelsByCategoryName(currentCategory).get(position) ){
-            onFullScreen(!playerInFullScreen);
+            if(!this.playerInFullScreen()) {
+                this.setFullScreen(true);
+            }
         }
 
         this.currentChannel = playlistManager.getCurrentPlaylist().getChannelsByCategoryName(currentCategory).get(position);
@@ -68,17 +70,26 @@ public class NavigationActivity extends AppCompatActivity implements OnCategorie
     private ConstraintLayout.LayoutParams initparams;
 
     @Override
-    public void onFullScreen(boolean isFullScreen) {
+    public void setFullScreen(boolean isFullScreen) {
+        System.out.println("onFullScreen");
+        System.out.println("fullscreen option : " + isFullScreen);
         playerInFullScreen = isFullScreen;
         FrameLayout player_fragment_viewer = findViewById(R.id.player_fragment_viewer);
         if(initparams == null){
             initparams = (ConstraintLayout.LayoutParams) player_fragment_viewer.getLayoutParams();
         }
-        if(!isFullScreen){
+        if(isFullScreen){
             player_fragment_viewer.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT));
+            this.playerInFullScreen = true;
         }else{
             player_fragment_viewer.setLayoutParams(initparams);
+            this.playerInFullScreen = false;
         }
+    }
+
+    @Override
+    public boolean playerInFullScreen() {
+        return playerInFullScreen;
     }
 
 }
