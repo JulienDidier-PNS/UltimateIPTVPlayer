@@ -111,20 +111,17 @@ public class PlaylistsManager {
         playlistCounter++;
     }
 
-    public void removePlaylist(int id) {
-        this.playlists.remove(id);
-        playlistCounter--;
-    }
-
     public void deleteCurrentPlaylist() {
-        //remove the playlist file
-        File file = new File(this.currentPlaylist.getInternalPlaylistPath());
-        file.delete();
-        if(file.exists()){
-            System.out.println("File not deleted");
+        //remove the playlist file and the favorite file
+        File playlistFile = new File(this.currentPlaylist.getInternalPlaylistPath());
+        File favoriteFile = new File(playlistFile.getParent() + "/favorites.m3u8");
+        playlistFile.delete();
+        favoriteFile.delete();
+        if(playlistFile.exists() || favoriteFile.exists()){
+            System.out.println("A file wasn't deleted correctly");
         }
         else{
-            System.out.println("File deleted");
+            System.out.println("All Files deleted");
             this.playlists.remove(this.currentPlaylist);
             playlistCounter--;
         }
