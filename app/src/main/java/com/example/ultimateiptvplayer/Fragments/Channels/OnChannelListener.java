@@ -1,6 +1,10 @@
 package com.example.ultimateiptvplayer.Fragments.Channels;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.concurrent.ExecutionException;
+
 public interface OnChannelListener {
-    void onChannelClick(int position);
+    void onChannelClick(int position) throws IOException, ExecutionException, InterruptedException;
     void onChannelLongClick(int position);
 }

@@ -3,6 +3,7 @@ package com.example.ultimateiptvplayer.Activities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.http.HttpResponseCache;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,11 +16,12 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.media3.datasource.HttpUtil;
 
 import com.example.ultimateiptvplayer.Entities.Channels.Channel;
+import com.example.ultimateiptvplayer.Entities.Download.UrlChecker;
 import com.example.ultimateiptvplayer.Entities.Playlist.ChannelAlreadyInFavoritesException;
 import com.example.ultimateiptvplayer.Enum.FAVORITE_OPTIONS;
-import com.example.ultimateiptvplayer.Enum.SETTINGS_OPTIONS;
 import com.example.ultimateiptvplayer.Fragments.Categorie.CategorieFragment;
 import com.example.ultimateiptvplayer.Fragments.Categorie.OnCategoriesListener;
 import com.example.ultimateiptvplayer.Fragments.Channels.ChannelQualityFragment;
@@ -27,17 +29,23 @@ import com.example.ultimateiptvplayer.Fragments.Channels.ChannelsFragment;
 import com.example.ultimateiptvplayer.Fragments.Channels.OnChannelListener;
 import com.example.ultimateiptvplayer.Fragments.Channels.OnQualityListener;
 import com.example.ultimateiptvplayer.Fragments.Player.PlayerFragment;
-import com.example.ultimateiptvplayer.Fragments.HeaderFragment;
-import com.example.ultimateiptvplayer.OnFullScreenListener;
-import com.example.ultimateiptvplayer.OnResetPlaylistListener;
+import com.example.ultimateiptvplayer.Fragments.Header.HeaderFragment;
+import com.example.ultimateiptvplayer.Fragments.Header.OnResetPlaylistListener;
 import com.example.ultimateiptvplayer.Entities.Playlist.PlaylistsManager;
 import com.example.ultimateiptvplayer.Enum.QUALITY;
 import com.example.ultimateiptvplayer.R;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeMap;
+import java.net.*;
+import java.util.concurrent.ExecutionException;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class NavigationActivity extends AppCompatActivity implements OnCategoriesListener, OnChannelListener, OnFullScreenListener, OnResetPlaylistListener, OnQualityListener {
     private PlaylistsManager playlistManager;
@@ -138,16 +146,30 @@ public class NavigationActivity extends AppCompatActivity implements OnCategorie
      * @param position
      */
     @Override
-    public void onChannelClick(int position) {
+    public void onChannelClick(int position) throws IOException, ExecutionException, InterruptedException {
         //if the same channel is currently playing, set it in full screen
-        if(this.currentChannel == this.currentChannelsByQuality.get(this.currentCategorieQuality).get(position) ){
-            if(!this.playerInFullScreen()) {this.setFullScreen(true);}
+        if (this.currentChannel == this.currentChannelsByQuality.get(this.currentCategorieQuality).get(position)) {
+            if (!this.playerInFullScreen()) {
+                this.setFullScreen(true);
+            }
         }
         //else, play the channel
-        else{
+        else {
             this.currentChannel = this.currentChannelsByQuality.get(this.currentCategorieQuality).get(position);
             playerFragment_viewer.setCurrentChannelUrl(this.currentChannel.getUrl());
-            if(this.playerFragment_viewer.playerReady()){playerFragment_viewer.playChannel();}
+            if (this.playerFragment_viewer.playerReady()) {
+                //check if the url is available
+                final int[] response = {-1};
+
+                int responseCode = UrlChecker.performNetworkOperation(currentChannel.getUrl());
+                if (responseCode == 200) {
+                    playerFragment_viewer.playChannel();
+                } else {
+                    //show a dead ogo on the player
+                    Toast.makeText(this, "La chaine n'est pas disponible", Toast.LENGTH_SHORT).show();
+                }
+                //playerFragment_viewer.playChannel();
+            }
         }
     }
 

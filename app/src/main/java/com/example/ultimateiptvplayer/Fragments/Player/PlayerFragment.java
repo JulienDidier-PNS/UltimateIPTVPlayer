@@ -20,7 +20,7 @@ import androidx.media3.common.util.Util;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
 
-import com.example.ultimateiptvplayer.OnFullScreenListener;
+import com.example.ultimateiptvplayer.Activities.OnFullScreenListener;
 import com.example.ultimateiptvplayer.R;
 
 public class PlayerFragment extends Fragment {
@@ -110,7 +110,12 @@ public class PlayerFragment extends Fragment {
 
         player.setMediaItem(mediaItem);
         player.prepare();
-        player.play();
+        try{
+            player.play();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void initializePlayer() {

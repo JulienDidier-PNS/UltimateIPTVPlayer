@@ -17,7 +17,9 @@ import com.bumptech.glide.Glide;
 import com.example.ultimateiptvplayer.Entities.Channels.Channel;
 import com.example.ultimateiptvplayer.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class ChannelsFragment extends Fragment {
 
@@ -39,7 +41,11 @@ public class ChannelsFragment extends Fragment {
         setupGridView();
 
         this.channelGrid.setOnItemClickListener((parent, view1, position, id) -> {
-            onChannelListener.onChannelClick(position);
+            try {
+                onChannelListener.onChannelClick(position);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         });
         this.channelGrid.setOnItemLongClickListener((parent, view12, position, id) -> {onChannelListener.onChannelLongClick(position);return true;});
 

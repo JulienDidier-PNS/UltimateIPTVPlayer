@@ -11,7 +11,6 @@ import com.example.ultimateiptvplayer.Entities.Channels.Exceptions.BadLoginExcep
 import com.example.ultimateiptvplayer.Fragments.Login.LoginFragment;
 import com.example.ultimateiptvplayer.Fragments.Login.OnLoginListener;
 import com.example.ultimateiptvplayer.Fragments.ProgressBar.ProgressBarFragment;
-import com.example.ultimateiptvplayer.OnDownloadListener;
 import com.example.ultimateiptvplayer.Entities.Playlist.PlaylistsManager;
 import com.example.ultimateiptvplayer.R;
 

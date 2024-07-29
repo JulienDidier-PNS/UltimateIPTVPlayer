@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.ultimateiptvplayer.OnDownloadListener;
+import com.example.ultimateiptvplayer.Activities.OnDownloadListener;
 import com.example.ultimateiptvplayer.R;
 
 

@@ -1,4 +1,4 @@
-package com.example.ultimateiptvplayer;
+package com.example.ultimateiptvplayer.Activities;
 
 public interface OnDownloadListener {
     void onDownloadComplete();
