@@ -1,26 +1,40 @@
-package com.example.ultimateiptvplayer;
+package com.example.ultimateiptvplayer.Activities;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.ultimateiptvplayer.Channels.Channel;
+import com.example.ultimateiptvplayer.Entities.Channels.Channel;
+import com.example.ultimateiptvplayer.Entities.Playlist.ChannelAlreadyInFavoritesException;
+import com.example.ultimateiptvplayer.Enum.FAVORITE_OPTIONS;
+import com.example.ultimateiptvplayer.Enum.SETTINGS_OPTIONS;
 import com.example.ultimateiptvplayer.Fragments.Categorie.CategorieFragment;
 import com.example.ultimateiptvplayer.Fragments.Categorie.OnCategoriesListener;
 import com.example.ultimateiptvplayer.Fragments.Channels.ChannelQualityFragment;
 import com.example.ultimateiptvplayer.Fragments.Channels.ChannelsFragment;
 import com.example.ultimateiptvplayer.Fragments.Channels.OnChannelListener;
 import com.example.ultimateiptvplayer.Fragments.Channels.OnQualityListener;
-import com.example.ultimateiptvplayer.Playlist.PlaylistsManager;
+import com.example.ultimateiptvplayer.Fragments.Player.PlayerFragment;
+import com.example.ultimateiptvplayer.Fragments.HeaderFragment;
+import com.example.ultimateiptvplayer.OnFullScreenListener;
+import com.example.ultimateiptvplayer.OnResetPlaylistListener;
+import com.example.ultimateiptvplayer.Entities.Playlist.PlaylistsManager;
+import com.example.ultimateiptvplayer.Enum.QUALITY;
+import com.example.ultimateiptvplayer.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeMap;
@@ -31,6 +45,7 @@ public class NavigationActivity extends AppCompatActivity implements OnCategorie
     private ChannelsFragment channelsFragment;
 
     private PlayerFragment playerFragment_viewer;
+    private Context context;
 
 
     private String currentCategory;
@@ -43,6 +58,7 @@ public class NavigationActivity extends AppCompatActivity implements OnCategorie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+        this.context = getApplicationContext();
 
         // Create the playlist manager
         playlistManager = PlaylistsManager.getInstance(getApplicationContext());
@@ -139,6 +155,65 @@ public class NavigationActivity extends AppCompatActivity implements OnCategorie
     public void onChannelLongClick(int position) {
         //show a dialog to add the channel to the favorite
         System.out.println("LONG CLICK ON CHANNEL");
+
+        // Créez un layout pour la boîte de dialogue
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_spinner, null);
+
+        // Trouvez le Spinner dans le layout
+        Spinner spinner = dialogView.findViewById(R.id.dialog_spinner);
+
+        ArrayAdapter<FAVORITE_OPTIONS> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, Arrays.asList(FAVORITE_OPTIONS.values()));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        FAVORITE_OPTIONS[] selectedOption = new FAVORITE_OPTIONS[1];
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedOption[0] = (FAVORITE_OPTIONS) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Aucune action nécessaire ici
+            }
+        });
+
+        Channel channelClicked = this.currentChannelsByQuality.get(this.currentCategorieQuality).get(position);
+
+        // Construire l'AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(NavigationActivity.this);
+        builder.setTitle("Sélectionner parmi les choix suivants")
+                .setView(dialogView)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    // Gérer le choix lorsqu'on appuie sur le bouton positif
+                    try {
+                        addChannelToFavorites(channelClicked);
+                        Toast.makeText(NavigationActivity.this, "Chaine : " + channelClicked.getChannelName() + "ajoutée aux favoris", Toast.LENGTH_SHORT).show();
+                    } catch (ChannelAlreadyInFavoritesException e) {
+                        Toast.makeText(NavigationActivity.this, "Chaine : " + channelClicked.getChannelName() + " déjà dans les favoris ❌", Toast.LENGTH_SHORT).show();
+                    }
+                    catch (IOException e){throw new RuntimeException(e);}
+                    // Ajoutez ici le traitement spécifique pour l'option sélectionnée
+                    //performActionBasedOnSelection(selectedOption[0]);
+                })
+                .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss());
+
+        // Afficher le Dialog
+        builder.create().show();
+    }
+
+    private void addChannelToFavorites(Channel channelClicked) throws IOException, ChannelAlreadyInFavoritesException {
+        // Ajoutez ici le traitement spécifique pour l'option sélectionnée
+
+        try{
+            playlistManager.addChannelToFavorites(channelClicked);
+        }
+        catch (ChannelAlreadyInFavoritesException e){
+            throw new ChannelAlreadyInFavoritesException(e.getMessage());
+        }
+        this.categorieFragment.updateCategories();
     }
 
     private ConstraintLayout.LayoutParams initparams;

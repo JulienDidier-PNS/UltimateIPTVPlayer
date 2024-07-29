@@ -1,4 +1,4 @@
-package com.example.ultimateiptvplayer.Fragments.Categorie.ListView;
+package com.example.ultimateiptvplayer.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,28 +7,30 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.ultimateiptvplayer.Enum.QUALITY;
+
 import java.util.List;
 
-public class CategoryAdapter extends ArrayAdapter<String> {
+public class QualityAdapter extends ArrayAdapter<QUALITY> {
     private Context context;
-    private List<String> categories;
+    private List<QUALITY> qualities;
 
-    public CategoryAdapter(Context context, List<String> categories) {
-        super(context, 0, categories);
+    public QualityAdapter(Context context, List<QUALITY> qualities) {
+        super(context, 0, qualities);
         this.context = context;
-        this.categories = categories;
+        this.qualities = qualities;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        String category = getItem(position);
+        QUALITY quality = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false);
         }
 
         TextView textView = convertView.findViewById(android.R.id.text1);
-        textView.setText(category);
+        textView.setText(quality.getQuality());
 
         return convertView;
     }

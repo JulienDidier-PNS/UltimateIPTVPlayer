@@ -1,6 +1,6 @@
-package com.example.ultimateiptvplayer.Channels;
+package com.example.ultimateiptvplayer.Entities.Channels;
 
-import com.example.ultimateiptvplayer.QUALITY;
+import com.example.ultimateiptvplayer.Enum.QUALITY;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -107,4 +107,6 @@ public class Channel {
         else if(SDmatcher.find()) {this.quality = QUALITY.SD;}
         else {this.quality =  QUALITY.UNKNOWN;}
     }
+
+
 }

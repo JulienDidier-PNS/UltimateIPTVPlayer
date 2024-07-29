@@ -1,12 +1,12 @@
-package com.example.ultimateiptvplayer;
+package com.example.ultimateiptvplayer.Enum;
 
-public enum OPTIONS {
+public enum SETTINGS_OPTIONS {
     CHANGE_PLAYLIST("Change Playlist"),
     ABOUT("About");
 
     private final String option;
 
-    OPTIONS(String option) {
+    SETTINGS_OPTIONS(String option) {
         this.option = option;
     }
 

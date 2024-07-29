@@ -5,21 +5,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.ultimateiptvplayer.Channels.Channel;
-import com.example.ultimateiptvplayer.QUALITY;
+import com.example.ultimateiptvplayer.Adapter.QualityAdapter;
+import com.example.ultimateiptvplayer.Entities.Channels.Channel;
+import com.example.ultimateiptvplayer.Enum.QUALITY;
 import com.example.ultimateiptvplayer.R;
 
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.ArrayList;
 
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 

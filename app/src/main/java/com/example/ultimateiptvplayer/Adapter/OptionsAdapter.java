@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.ultimateiptvplayer.OPTIONS;
+import com.example.ultimateiptvplayer.Enum.SETTINGS_OPTIONS;
 
 import java.util.List;
 
-public class OptionsAdapter extends ArrayAdapter<OPTIONS> {
+public class OptionsAdapter extends ArrayAdapter<SETTINGS_OPTIONS> {
     private Context context;
-    private List<OPTIONS> options;
+    private List<SETTINGS_OPTIONS> options;
 
-    public OptionsAdapter(Context context, List<OPTIONS> options) {
+    public OptionsAdapter(Context context, List<SETTINGS_OPTIONS> options) {
         super(context, 0,options);
         this.context = context;
         this.options = options;
@@ -23,7 +23,7 @@ public class OptionsAdapter extends ArrayAdapter<OPTIONS> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        OPTIONS option = getItem(position);
+        SETTINGS_OPTIONS option = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false);

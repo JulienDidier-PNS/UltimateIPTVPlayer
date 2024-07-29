@@ -1,4 +1,4 @@
-package com.example.ultimateiptvplayer.Fragments.Channels;
+package com.example.ultimateiptvplayer.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,31 +7,28 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.ultimateiptvplayer.QUALITY;
-
-import java.util.ArrayList;
 import java.util.List;
 
-public class QualityAdapter extends ArrayAdapter<QUALITY> {
+public class CategoryAdapter extends ArrayAdapter<String> {
     private Context context;
-    private List<QUALITY> qualities;
+    private List<String> categories;
 
-    public QualityAdapter(Context context, List<QUALITY> qualities) {
-        super(context, 0, qualities);
+    public CategoryAdapter(Context context, List<String> categories) {
+        super(context, 0, categories);
         this.context = context;
-        this.qualities = qualities;
+        this.categories = categories;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        QUALITY quality = getItem(position);
+        String category = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false);
         }
 
         TextView textView = convertView.findViewById(android.R.id.text1);
-        textView.setText(quality.getQuality());
+        textView.setText(category);
 
         return convertView;
     }

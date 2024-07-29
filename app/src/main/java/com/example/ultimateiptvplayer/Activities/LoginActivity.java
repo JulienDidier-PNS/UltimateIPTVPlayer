@@ -1,4 +1,4 @@
-package com.example.ultimateiptvplayer;
+package com.example.ultimateiptvplayer.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.ultimateiptvplayer.Channels.Exceptions.BadLoginException;
+import com.example.ultimateiptvplayer.Entities.Channels.Exceptions.BadLoginException;
 import com.example.ultimateiptvplayer.Fragments.Login.LoginFragment;
 import com.example.ultimateiptvplayer.Fragments.Login.OnLoginListener;
 import com.example.ultimateiptvplayer.Fragments.ProgressBar.ProgressBarFragment;
-import com.example.ultimateiptvplayer.Playlist.PlaylistsManager;
+import com.example.ultimateiptvplayer.OnDownloadListener;
+import com.example.ultimateiptvplayer.Entities.Playlist.PlaylistsManager;
+import com.example.ultimateiptvplayer.R;
 
 import java.io.IOException;
 

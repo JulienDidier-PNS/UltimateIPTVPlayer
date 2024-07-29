@@ -1,9 +1,10 @@
-package com.example.ultimateiptvplayer.Playlist;
+package com.example.ultimateiptvplayer.Entities.Playlist;
 
 import android.content.Context;
 import android.net.Uri;
 
-import com.example.ultimateiptvplayer.Download.FileDownloader;
+import com.example.ultimateiptvplayer.Entities.Channels.Channel;
+import com.example.ultimateiptvplayer.Entities.Download.FileDownloader;
 import com.example.ultimateiptvplayer.Fragments.ProgressBar.ProgressCallBack;
 
 import java.io.File;
@@ -27,6 +28,10 @@ public class PlaylistsManager {
         this.appContext = context;
         initPlaylistCounter();
         initPlaylists();
+    }
+
+    public void addChannelToFavorites(Channel channel) throws IOException, ChannelAlreadyInFavoritesException {
+        this.currentPlaylist.addChannelToFavorites(channel);
     }
 
     public int getPlaylistCounter() {
@@ -92,7 +97,7 @@ public class PlaylistsManager {
     public void addPlaylist(Context context, String id, String password, String playlistUrl,String playlistName, ProgressCallBack callback) throws IOException {
         //Add playlist to the list
         //Download the playlist
-        System.out.println("Playlist name : " + playlistName);
+        System.out.println("Playlist id : " + id);
         String url = "http://" + playlistUrl + "/get.php?username=" + id + "&password=" + password + "&output=ts&type=m3u_plus";
         String filename = "playlist.m3u8";
         String playlistPath = Objects.requireNonNull(context.getExternalFilesDir(null)).getPath() + "/" + filename;

@@ -1,6 +1,6 @@
 package com.example.ultimateiptvplayer.Fragments.Login;
 
-import com.example.ultimateiptvplayer.Channels.Exceptions.BadLoginException;
+import com.example.ultimateiptvplayer.Entities.Channels.Exceptions.BadLoginException;
 
 import java.io.IOException;
 

@@ -1,6 +1,5 @@
 package com.example.ultimateiptvplayer.Fragments.Categorie;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,17 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.ultimateiptvplayer.Channels.Channel;
-import com.example.ultimateiptvplayer.Fragments.Categorie.ListView.CategoryAdapter;
-import com.example.ultimateiptvplayer.Fragments.Channels.ChannelsFragment;
-import com.example.ultimateiptvplayer.Fragments.Channels.OnChannelListener;
-import com.example.ultimateiptvplayer.Playlist.Playlist;
+import com.example.ultimateiptvplayer.Enum.LANGAGES;
+import com.example.ultimateiptvplayer.Entities.Channels.Channel;
+import com.example.ultimateiptvplayer.Adapter.CategoryAdapter;
+import com.example.ultimateiptvplayer.Entities.Playlist.Playlist;
 import com.example.ultimateiptvplayer.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,21 +77,8 @@ public class CategorieFragment extends Fragment {
             String category = (String) parent.getItemAtPosition(position);
             System.out.println("Selected Category: " + category);
 
-            if(currentCategoryPosition != -1) {
-                View previousView = parent.getChildAt(currentCategoryPosition);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    //remove the background color of the previous selected category
-                    previousView.setBackgroundColor(getResources().getColor(R.color.transparent, null));
-                } else {
-                    previousView.setBackgroundColor(getResources().getColor(R.color.transparent));
-                }
-            }
-
             this.currentCategory = category;
             this.currentCategoryPosition = position;
-
-            //set the background color of the selected category
-            view1.setBackgroundColor(getResources().getColor(R.color.purple));
 
             this.onCategoriesListener.onCategoriesClick(category);
         });
@@ -106,6 +89,7 @@ public class CategorieFragment extends Fragment {
         return view;
     }
 
+
     public String getCurrentCategory() {
         return currentCategory;
     }
@@ -115,6 +99,11 @@ public class CategorieFragment extends Fragment {
 
         CategoryAdapter adapter = new CategoryAdapter(getContext(), categories);
         categorieLV.setAdapter(adapter);
+    }
+
+    public void updateCategories() {
+        LANGAGES langage = LANGAGES.valueOf(langageFilter.getSelectedItem().toString());
+        setupListView(langage);
     }
 
     /**
@@ -128,6 +117,7 @@ public class CategorieFragment extends Fragment {
         //Add other pattern for other langages
         Pattern frenchPattern = Pattern.compile("EU \\| FRANCE", Pattern.CASE_INSENSITIVE);
 
+        if(categories.contains("Favorites")){sortedCategories.add("Favorites");}
         //Add ONLY THE CATEGORIES WHICH MATCHES
         if(langage == LANGAGES.FR){
             for (String category : categories) {

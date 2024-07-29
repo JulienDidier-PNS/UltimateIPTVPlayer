@@ -1,4 +1,4 @@
-package com.example.ultimateiptvplayer;
+package com.example.ultimateiptvplayer.Fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -17,15 +16,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.ultimateiptvplayer.Adapter.OptionsAdapter;
+import com.example.ultimateiptvplayer.Enum.SETTINGS_OPTIONS;
+import com.example.ultimateiptvplayer.OnResetPlaylistListener;
+import com.example.ultimateiptvplayer.R;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public class HeaderFragment extends Fragment {
 
     private final Context context;
-    private OnResetPlaylistListener onResetPlaylistListener;
+    private final OnResetPlaylistListener onResetPlaylistListener;
 
     public HeaderFragment(Context context, OnResetPlaylistListener onResetPlaylistListener) {
         this.context = context;
@@ -57,16 +57,16 @@ public class HeaderFragment extends Fragment {
         // Trouvez le Spinner dans le layout
         Spinner spinner = dialogView.findViewById(R.id.dialog_spinner);
 
-        ArrayAdapter<OPTIONS> adapter = new ArrayAdapter<>(this.context, android.R.layout.simple_spinner_item, Arrays.asList(OPTIONS.values()));
+        ArrayAdapter<SETTINGS_OPTIONS> adapter = new ArrayAdapter<>(this.context, android.R.layout.simple_spinner_item, Arrays.asList(SETTINGS_OPTIONS.values()));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        OPTIONS[] selectedOption = new OPTIONS[1];
+        SETTINGS_OPTIONS[] selectedOption = new SETTINGS_OPTIONS[1];
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedOption[0] = (OPTIONS) parent.getItemAtPosition(position);
+                selectedOption[0] = (SETTINGS_OPTIONS) parent.getItemAtPosition(position);
             }
 
             @Override
@@ -91,10 +91,10 @@ public class HeaderFragment extends Fragment {
         builder.create().show();
     }
 
-    private void performActionBasedOnSelection(OPTIONS selectedItem) {
+    private void performActionBasedOnSelection(SETTINGS_OPTIONS selectedItem) {
         // Effectuez une action en fonction de l'élément sélectionné
 
-        if(selectedItem.equals(OPTIONS.CHANGE_PLAYLIST)){
+        if(selectedItem.equals(SETTINGS_OPTIONS.CHANGE_PLAYLIST)){
             //CHANGER LA PLAYLIST
             this.onResetPlaylistListener.onResetPlaylist();
         }

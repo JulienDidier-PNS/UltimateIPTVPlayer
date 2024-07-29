@@ -1,4 +1,4 @@
-package com.example.ultimateiptvplayer.Fragments.Channels;
+package com.example.ultimateiptvplayer.Entities.Download;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

@@ -1,4 +1,4 @@
-package com.example.ultimateiptvplayer.Fragments.Categorie;
+package com.example.ultimateiptvplayer.Enum;
 
 public enum LANGAGES {
     FR("FR"),

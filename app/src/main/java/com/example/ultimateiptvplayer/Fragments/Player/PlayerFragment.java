@@ -1,4 +1,4 @@
-package com.example.ultimateiptvplayer;
+package com.example.ultimateiptvplayer.Fragments.Player;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
@@ -22,9 +20,12 @@ import androidx.media3.common.util.Util;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
 
+import com.example.ultimateiptvplayer.OnFullScreenListener;
+import com.example.ultimateiptvplayer.R;
+
 public class PlayerFragment extends Fragment {
     public static PlayerFragment instance;
-    public static PlayerFragment getInstance(Context context,OnFullScreenListener fcListener) {
+    public static PlayerFragment getInstance(Context context, OnFullScreenListener fcListener) {
         if (instance == null) {instance = new PlayerFragment(context,fcListener);}
         return instance;
     }

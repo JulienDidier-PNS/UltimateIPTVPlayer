@@ -1,11 +1,10 @@
-package com.example.ultimateiptvplayer.Download;
+package com.example.ultimateiptvplayer.Entities.Download;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 
 import androidx.annotation.OptIn;
-import androidx.media3.common.util.Log;
 import androidx.media3.common.util.UnstableApi;
 
 import java.io.File;

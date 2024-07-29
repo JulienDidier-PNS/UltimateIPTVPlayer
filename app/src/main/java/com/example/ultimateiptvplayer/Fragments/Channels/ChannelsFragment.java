@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.example.ultimateiptvplayer.Channels.Channel;
+import com.example.ultimateiptvplayer.Entities.Channels.Channel;
 import com.example.ultimateiptvplayer.R;
 
 import java.util.ArrayList;
@@ -29,8 +29,6 @@ public class ChannelsFragment extends Fragment {
         this.channelsList = channels;
         this.onChannelListener = onChannelListener;
     }
-
-    private int currentChannelPosition = -1;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,17 +39,6 @@ public class ChannelsFragment extends Fragment {
         setupGridView();
 
         this.channelGrid.setOnItemClickListener((parent, view1, position, id) -> {
-
-            if(currentChannelPosition != -1){
-                View previousView = parent.getChildAt(currentChannelPosition);
-                previousView.setBackgroundColor(getResources().getColor(R.color.transparent));
-                view1.setBackground(getResources().getDrawable(R.color.purple));
-            }
-            else{
-                view1.setBackground(getResources().getDrawable(R.color.purple));
-            }
-            currentChannelPosition = position;
-
             onChannelListener.onChannelClick(position);
         });
         this.channelGrid.setOnItemLongClickListener((parent, view12, position, id) -> {onChannelListener.onChannelLongClick(position);return true;});
